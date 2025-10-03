@@ -20,12 +20,12 @@ export const COLORS = {
 };
 
 export const SIZES = {
-  player: { width: 24, height: 28 },
+  player: { width: 48, height: 56 },
   ground: { width: 96, height: 24 },
   platform: { width: 72, height: 18 },
   hazard: { width: 32, height: 16 },
-  flag: { width: 16, height: 32 },
-  star: { size: 418 },
+  flag: { width: 32, height: 375 },
+  star: { size: 18 },
 };
 
 export const MOVEMENT = {

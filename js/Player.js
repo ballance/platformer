@@ -19,7 +19,7 @@ export class Player {
     this.sprite.setCollideWorldBounds(true);
     this.sprite.setBounce(GAME_CONFIG.physics.playerBounce);
     this.sprite.body.setGravityY(GAME_CONFIG.physics.gravity);
-    this.sprite.body.setSize(18, 24).setOffset(3, 3);
+    this.sprite.body.setSize(36, 48).setOffset(6, 6);
 
     // Set up input
     this.cursors = this.scene.input.keyboard.createCursorKeys();
@@ -43,10 +43,15 @@ export class Player {
 
     if (movingLeft && !movingRight) {
       this.sprite.setVelocityX(-MOVEMENT.speed);
+      this.sprite.setFlipX(true);  // Face left
+      this.sprite.setTexture("playerRunTex"); // Use running texture
     } else if (movingRight && !movingLeft) {
       this.sprite.setVelocityX(MOVEMENT.speed);
+      this.sprite.setFlipX(false); // Face right (default)
+      this.sprite.setTexture("playerRunTex"); // Use running texture
     } else {
       this.sprite.setVelocityX(0);
+      this.sprite.setTexture("playerTex"); // Use standing texture
     }
   }
 
@@ -66,10 +71,56 @@ export class Player {
     this.scene.cameras.main.flash(150, 255, 80, 80);
     this.sprite.setVelocity(0, 0);
     this.sprite.setPosition(this.startX, this.startY);
+
+    // Display LAVA!!! banner
+    const lavaText = this.scene.add.text(
+      this.scene.cameras.main.centerX,
+      this.scene.cameras.main.centerY,
+      'LAVA!!!',
+      {
+        fontSize: '72px',
+        fontStyle: 'bold',
+        color: '#ff0000',
+        stroke: '#ffffff',
+        strokeThickness: 6,
+        shadow: {
+          offsetX: 4,
+          offsetY: 4,
+          color: '#000000',
+          blur: 8,
+          fill: true
+        }
+      }
+    );
+
+    lavaText.setOrigin(0.5, 0.5);
+    lavaText.setDepth(1000); // Make sure it appears on top
+
+    // Animate the text
+    this.scene.tweens.add({
+      targets: lavaText,
+      scaleX: 1.5,
+      scaleY: 1.5,
+      alpha: 0,
+      duration: 800,
+      ease: 'Power2',
+      onComplete: () => {
+        lavaText.destroy();
+      }
+    });
   }
 
   stop() {
     this.sprite.setVelocity(0, 0);
+  }
+
+  respawnAt(x, y) {
+    this.startX = x;
+    this.startY = y;
+    this.sprite.setVelocity(0, 0);
+    this.sprite.setPosition(x, y);
+    this.sprite.setTexture("playerTex"); // Reset to standing texture
+    this.sprite.setFlipX(false); // Face right by default
   }
 
   getSprite() {

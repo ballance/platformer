@@ -5,16 +5,25 @@ export class UIManager {
     this.scene = scene;
     this.score = 0;
     this.scoreText = null;
+    this.levelText = null;
     this.banner = null;
   }
 
   create() {
     this.createScoreDisplay();
+    this.createLevelDisplay();
     this.createBanner();
   }
 
   createScoreDisplay() {
     this.scoreText = this.scene.add.text(12, 12, 'Score: 0', {
+      fontSize: '18px',
+      color: '#f1f5f9'
+    }).setScrollFactor(0);
+  }
+
+  createLevelDisplay() {
+    this.levelText = this.scene.add.text(12, 36, 'Level: 1', {
       fontSize: '18px',
       color: '#f1f5f9'
     }).setScrollFactor(0);
@@ -49,13 +58,23 @@ export class UIManager {
   }
 
   showLevelComplete() {
-    this.showWinMessage();
+    this.banner.setText('Level Complete!');
     this.addScore(SCORING.win);
+  }
+
+  showGameComplete() {
+    this.banner.setText('Game Complete! 🎉');
+    this.addScore(SCORING.win * 2); // Bonus for completing the game
+  }
+
+  updateLevel(levelNumber) {
+    this.levelText.setText(`Level: ${levelNumber}`);
   }
 
   reset() {
     this.score = 0;
     this.updateScoreDisplay();
     this.banner.setText('');
+    this.updateLevel(1);
   }
 }

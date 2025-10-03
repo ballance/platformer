@@ -11,6 +11,7 @@ export class MainScene extends Phaser.Scene {
     this.level = null;
     this.player = null;
     this.uiManager = null;
+    this.currentLevel = 1;
   }
 
   preload() {
@@ -23,14 +24,16 @@ export class MainScene extends Phaser.Scene {
     this.physics.world.setBounds(0, 0, GAME_CONFIG.width, GAME_CONFIG.height);
 
     // Initialize managers
-    this.level = new Level(this);
-    this.player = new Player(this, 80, GAME_CONFIG.height - 24 - 80);
+    this.level = new Level(this, this.currentLevel);
+    const startPos = this.level.getPlayerStartPosition();
+    this.player = new Player(this, startPos.x, startPos.y);
     this.uiManager = new UIManager(this);
 
     // Create game objects
     this.level.create();
     this.player.create();
     this.uiManager.create();
+    this.uiManager.updateLevel(this.currentLevel);
 
     // Set up collisions and interactions
     this.setupCollisions();
@@ -76,7 +79,39 @@ export class MainScene extends Phaser.Scene {
   }
 
   reachGoal() {
-    this.uiManager.showLevelComplete();
     this.player.stop();
+
+    if (this.currentLevel === 1) {
+      // Show level complete and transition to level 2
+      this.uiManager.showLevelComplete();
+
+      this.time.delayedCall(2000, () => {
+        this.loadLevel(2);
+      });
+    } else {
+      // Game complete
+      this.uiManager.showGameComplete();
+    }
+  }
+
+  loadLevel(levelNumber) {
+    this.currentLevel = levelNumber;
+
+    // Clear current level
+    this.level.clear();
+
+    // Create new level
+    this.level = new Level(this, this.currentLevel);
+    this.level.create();
+
+    // Reset player position
+    const startPos = this.level.getPlayerStartPosition();
+    this.player.respawnAt(startPos.x, startPos.y);
+
+    // Update UI
+    this.uiManager.updateLevel(this.currentLevel);
+
+    // Re-setup collisions
+    this.setupCollisions();
   }
 }
