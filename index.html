@@ -1,0 +1,27 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Mini Platformer – Phaser 3</title>
+  <style>
+    html, body { height: 100%; margin: 0; background:#10141a; font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial; }
+    #game { display:flex; align-items:center; justify-content:center; height:100%; }
+    .help { position: fixed; inset: auto 12px 12px 12px; color:#cfd7e3; opacity:.9; font-size:14px; line-height:1.35;}
+    .help kbd{background:#1e2633; border:1px solid #2c3647; padding:2px 5px; border-radius:6px; font-family: ui-monospace, SFMono-Regular, Menlo, monospace;}
+    .help .title{ font-weight:700; color:#fff; }
+  </style>
+</head>
+<body>
+  <div id="game"></div>
+  <div class="help">
+    <div class="title">Mini Platformer</div>
+    Move with <kbd>←</kbd><kbd>→</kbd>, jump with <kbd>↑</kbd> or <kbd>Space</kbd>.
+    Reach the flag! Refresh to reset.
+  </div>
+
+  <!-- Phaser 3 CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/phaser@3.80.0/dist/phaser.min.js"></script>
+  <script type="module" src="js/game.js"></script>
+</body>
+</html>
