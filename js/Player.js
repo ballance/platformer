@@ -1,4 +1,4 @@
-import { GAME_CONFIG, MOVEMENT } from './config.js';
+import { GAME_CONFIG, MOVEMENT } from "./config.js";
 
 export class Player {
   constructor(scene, x, y) {
@@ -11,7 +11,11 @@ export class Player {
   }
 
   create() {
-    this.sprite = this.scene.physics.add.image(this.startX, this.startY, 'playerTex');
+    this.sprite = this.scene.physics.add.image(
+      this.startX,
+      this.startY,
+      "playerTex",
+    );
     this.sprite.setCollideWorldBounds(true);
     this.sprite.setBounce(GAME_CONFIG.physics.playerBounce);
     this.sprite.body.setGravityY(GAME_CONFIG.physics.gravity);
@@ -22,7 +26,7 @@ export class Player {
     this.alternateKeys = {
       left: this.scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.A),
       right: this.scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.D),
-      up: this.scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.W)
+      up: this.scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.W),
     };
   }
 
@@ -32,8 +36,10 @@ export class Player {
   }
 
   handleMovement() {
-    const movingLeft = this.cursors.left.isDown || this.alternateKeys.left.isDown;
-    const movingRight = this.cursors.right.isDown || this.alternateKeys.right.isDown;
+    const movingLeft =
+      this.cursors.left.isDown || this.alternateKeys.left.isDown;
+    const movingRight =
+      this.cursors.right.isDown || this.alternateKeys.right.isDown;
 
     if (movingLeft && !movingRight) {
       this.sprite.setVelocityX(-MOVEMENT.speed);

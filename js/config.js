@@ -2,11 +2,11 @@
 export const GAME_CONFIG = {
   width: 960,
   height: 540,
-  backgroundColor: '#0e1117',
+  backgroundColor: "#0e1117",
   physics: {
     gravity: 850,
-    playerBounce: 0.05
-  }
+    playerBounce: 0.05,
+  },
 };
 
 export const COLORS = {
@@ -16,7 +16,7 @@ export const COLORS = {
   hazard: 0xff6b6b,
   flagPole: 0xffe66d,
   flagBanner: 0xff9f1c,
-  star: 0xffd166
+  star: 0xffd166,
 };
 
 export const SIZES = {
@@ -25,15 +25,15 @@ export const SIZES = {
   platform: { width: 72, height: 18 },
   hazard: { width: 32, height: 16 },
   flag: { width: 16, height: 32 },
-  star: { size: 18 }
+  star: { size: 418 },
 };
 
 export const MOVEMENT = {
   speed: 200,
-  jumpVelocity: -420
+  jumpVelocity: -420,
 };
 
 export const SCORING = {
   star: 10,
-  win: 50
+  win: 50,
 };
