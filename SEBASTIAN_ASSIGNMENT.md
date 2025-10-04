@@ -49,16 +49,16 @@ Players have reported that in Level 2, there's a platform that they cannot jump 
 5. Play through the entire level to make sure it's completable
 
 ### Bonus Challenges (Optional)
-- [ ] Add a comment in the code explaining why you chose that specific height
-- [ ] Test if the level is still fun and challenging after your fix
+- [x] Add a comment in the code explaining why you chose that specific height
+- [x] Test if the level is still fun and challenging after your fix
 - [ ] Check if any stars need to be repositioned after moving the platform
 
 ### Testing Checklist
 Before you're done, make sure:
-- [ ] You can jump to every platform in Level 2
+- [x] You can jump to every platform in Level 2
 - [ ] You can collect all stars
-- [ ] You can reach the flag and complete the level
-- [ ] The level is still challenging but fair
+- [x] You can reach the flag and complete the level
+- [x] The level is still challenging but fair
 
 ### Submission
 When you're finished:
@@ -74,13 +74,13 @@ When you're finished:
 (Write your answer here after completing the assignment)
 
 **Problem Platform**:
-
+The platform was too high and the player could not jump high enough to reach it
 **What was wrong**:
-
+see above
 **How I fixed it**:
-
+We changed the height of the platform to make it reachable
 **New y-coordinate I used**:
-
+430
 ---
 
 ### Teacher's Notes

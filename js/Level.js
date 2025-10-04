@@ -1,4 +1,4 @@
-import { GAME_CONFIG } from './config.js';
+import { GAME_CONFIG } from "./config.js";
 
 const LEVEL_DATA = {
   1: {
@@ -9,32 +9,32 @@ const LEVEL_DATA = {
       { x: 360, y: 360 },
       { x: 530, y: 300 },
       { x: 700, y: 260 },
-      { x: 820, y: 220 }
+      { x: 820, y: 220 },
     ],
     hazards: [
       { x: 330, y: GAME_CONFIG.height - 24 - 12 },
       { x: 360, y: GAME_CONFIG.height - 24 - 12 },
-      { x: 390, y: GAME_CONFIG.height - 24 - 12 }
+      { x: 390, y: GAME_CONFIG.height - 24 - 12 },
     ],
     stars: [
       { x: 360, y: 320 },
       { x: 530, y: 260 },
-      { x: 700, y: 220 }
+      { x: 700, y: 220 },
     ],
-    flag: { x: 900, y: GAME_CONFIG.height - 24 - 188 }
+    flag: { x: 900, y: GAME_CONFIG.height - 24 - 188 },
   },
   2: {
     playerStart: { x: 80, y: GAME_CONFIG.height - 24 - 80 },
     ground: [100, 196, 580, 676, 772, 868], // Gaps for lava pits
     platforms: [
-      { x: 250, y: 400 },  // Over first lava pit
+      { x: 250, y: 430 }, // Player can only jump 430, so the first platform can't be too high
       { x: 340, y: 350 },
-      { x: 430, y: 300 },  // Bridge between pits
+      { x: 430, y: 300 }, // Bridge between pits
       { x: 520, y: 350 },
       { x: 630, y: 320 },
       { x: 740, y: 280 },
       { x: 850, y: 240 },
-      { x: 900, y: 180 }   // Platform near flag
+      { x: 900, y: 180 }, // Platform near flag
     ],
     hazards: [
       // First lava pit
@@ -45,16 +45,16 @@ const LEVEL_DATA = {
       // Second lava pit
       { x: 484, y: GAME_CONFIG.height - 24 - 12 },
       { x: 516, y: GAME_CONFIG.height - 24 - 12 },
-      { x: 548, y: GAME_CONFIG.height - 24 - 12 }
+      { x: 548, y: GAME_CONFIG.height - 24 - 12 },
     ],
     stars: [
       { x: 340, y: 310 },
       { x: 520, y: 310 },
       { x: 740, y: 240 },
-      { x: 900, y: 140 }
+      { x: 900, y: 140 },
     ],
-    flag: { x: 920, y: GAME_CONFIG.height - 24 - 188 }
-  }
+    flag: { x: 920, y: GAME_CONFIG.height - 24 - 188 },
+  },
 };
 
 export class Level {
@@ -87,32 +87,37 @@ export class Level {
 
     const groundY = GAME_CONFIG.height - 24;
 
-    this.levelData.ground.forEach(x => {
-      this.addStaticElement('groundTex', x, groundY, this.platforms);
+    this.levelData.ground.forEach((x) => {
+      this.addStaticElement("groundTex", x, groundY, this.platforms);
     });
 
     // Floating platforms
-    this.levelData.platforms.forEach(platform => {
-      this.addStaticElement('platformTex', platform.x, platform.y, this.platforms);
+    this.levelData.platforms.forEach((platform) => {
+      this.addStaticElement(
+        "platformTex",
+        platform.x,
+        platform.y,
+        this.platforms,
+      );
     });
   }
 
   createHazards() {
     this.hazards = this.scene.physics.add.staticGroup();
 
-    this.levelData.hazards.forEach(hazard => {
-      this.addStaticElement('hazardTex', hazard.x, hazard.y, this.hazards);
+    this.levelData.hazards.forEach((hazard) => {
+      this.addStaticElement("hazardTex", hazard.x, hazard.y, this.hazards);
     });
   }
 
   createCollectibles() {
     this.stars = this.scene.physics.add.group({
       allowGravity: false,
-      immovable: true
+      immovable: true,
     });
 
-    this.levelData.stars.forEach(star => {
-      const starImage = this.scene.physics.add.image(star.x, star.y, 'starTex');
+    this.levelData.stars.forEach((star) => {
+      const starImage = this.scene.physics.add.image(star.x, star.y, "starTex");
       starImage.body.setAllowGravity(false);
       this.stars.add(starImage);
     });
@@ -122,7 +127,7 @@ export class Level {
     this.flag = this.scene.physics.add.staticImage(
       this.levelData.flag.x,
       this.levelData.flag.y,
-      'flagTex'
+      "flagTex",
     );
   }
 
