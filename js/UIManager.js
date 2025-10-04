@@ -18,14 +18,18 @@ export class UIManager {
   createScoreDisplay() {
     this.scoreText = this.scene.add.text(12, 12, 'Score: 0', {
       fontSize: '18px',
-      color: '#f1f5f9'
+      color: '#f1f5f9',
+      stroke: '#000000',
+      strokeThickness: 3
     }).setScrollFactor(0);
   }
 
   createLevelDisplay() {
     this.levelText = this.scene.add.text(12, 36, 'Level: 1', {
       fontSize: '18px',
-      color: '#f1f5f9'
+      color: '#f1f5f9',
+      stroke: '#000000',
+      strokeThickness: 3
     }).setScrollFactor(0);
   }
 
@@ -33,7 +37,9 @@ export class UIManager {
     this.banner = this.scene.add.text(GAME_CONFIG.width / 2, 60, '', {
       fontSize: '28px',
       fontStyle: '700',
-      color: '#e2e8f0'
+      color: '#e2e8f0',
+      stroke: '#000000',
+      strokeThickness: 4
     }).setOrigin(0.5);
   }
 
@@ -60,6 +66,9 @@ export class UIManager {
   showLevelComplete() {
     this.banner.setText('Level Complete!');
     this.addScore(SCORING.win);
+    this.scene.time.delayedCall(1500, () => {
+      this.banner.setText('');
+    });
   }
 
   showGameComplete() {

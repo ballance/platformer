@@ -78,6 +78,9 @@ export class TextureFactory {
     );
 
     graphics.fillPoints(points, true);
+    // Add a white outline to make the star more visible
+    graphics.lineStyle(3, 0xffffff, 0.8);
+    graphics.strokePoints(points, true);
     graphics.generateTexture(key, size * 2, size * 2);
     graphics.destroy();
   }
@@ -86,7 +89,7 @@ export class TextureFactory {
     const graphics = this.scene.add.graphics();
 
     // Stick figure color (black lines)
-    const stickColor = 0xcccccc;
+    const stickColor = COLORS.player;
     const lineWidth = 4;
 
     graphics.lineStyle(lineWidth, stickColor, 1);
@@ -141,7 +144,7 @@ export class TextureFactory {
     const graphics = this.scene.add.graphics();
 
     // Stick figure color (black lines)
-    const stickColor = 0xcccccc;
+    const stickColor = COLORS.player;
     const lineWidth = 4;
 
     graphics.lineStyle(lineWidth, stickColor, 1);
