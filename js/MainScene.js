@@ -1,12 +1,12 @@
-import { GAME_CONFIG } from './config.js';
-import { TextureFactory } from './TextureFactory.js';
-import { Level } from './Level.js';
-import { Player } from './Player.js';
-import { UIManager } from './UIManager.js';
+import { GAME_CONFIG } from "./config.js";
+import { TextureFactory } from "./TextureFactory.js";
+import { Level } from "./Level.js";
+import { Player } from "./Player.js";
+import { UIManager } from "./UIManager.js";
 
 export class MainScene extends Phaser.Scene {
   constructor() {
-    super('main');
+    super("main");
     this.textureFactory = null;
     this.level = null;
     this.player = null;
@@ -45,27 +45,30 @@ export class MainScene extends Phaser.Scene {
 
   setupCollisions() {
     // Player collisions with platforms
-    this.physics.add.collider(this.player.getSprite(), this.level.getPlatforms());
+    this.physics.add.collider(
+      this.player.getSprite(),
+      this.level.getPlatforms(),
+    );
 
     // Star collection
     this.physics.add.overlap(
       this.player.getSprite(),
       this.level.getStars(),
-      this.collectStar.bind(this)
+      this.collectStar.bind(this),
     );
 
     // Hazard collision
     this.physics.add.overlap(
       this.player.getSprite(),
       this.level.getHazards(),
-      this.hitHazard.bind(this)
+      this.hitHazard.bind(this),
     );
 
     // Win condition
     this.physics.add.overlap(
       this.player.getSprite(),
       this.level.getFlag(),
-      this.reachGoal.bind(this)
+      this.reachGoal.bind(this),
     );
   }
 
@@ -87,6 +90,13 @@ export class MainScene extends Phaser.Scene {
 
       this.time.delayedCall(2000, () => {
         this.loadLevel(2);
+      });
+    } else if (this.currentLevel === 2) {
+      // Show level complete and transition to level 2
+      this.uiManager.showLevelComplete();
+
+      this.time.delayedCall(2000, () => {
+        this.loadLevel(3);
       });
     } else {
       // Game complete

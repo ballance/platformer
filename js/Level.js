@@ -55,6 +55,38 @@ const LEVEL_DATA = {
     ],
     flag: { x: 920, y: GAME_CONFIG.height - 24 - 188 },
   },
+  3: {
+    playerStart: { x: 80, y: GAME_CONFIG.height - 24 - 80 },
+    ground: [100, 196, 580, 676, 772, 868], // Gaps for lava pits
+    platforms: [
+      { x: 250, y: 430 }, // Player can only jump 430, so the first platform can't be too high
+      { x: 340, y: 350 },
+      { x: 430, y: 300 }, // Bridge between pits
+      { x: 520, y: 350 },
+      { x: 630, y: 320 },
+      { x: 740, y: 280 },
+      { x: 850, y: 240 },
+      { x: 900, y: 180 }, // Platform near flag
+    ],
+    hazards: [
+      // First lava pit
+      { x: 292, y: GAME_CONFIG.height - 24 - 12 },
+      { x: 324, y: GAME_CONFIG.height - 24 - 12 },
+      { x: 356, y: GAME_CONFIG.height - 24 - 12 },
+      { x: 388, y: GAME_CONFIG.height - 24 - 12 },
+      // Second lava pit
+      { x: 484, y: GAME_CONFIG.height - 24 - 12 },
+      { x: 516, y: GAME_CONFIG.height - 24 - 12 },
+      { x: 548, y: GAME_CONFIG.height - 24 - 12 },
+    ],
+    stars: [
+      { x: 340, y: 310 },
+      { x: 520, y: 310 },
+      { x: 740, y: 240 },
+      { x: 900, y: 140 },
+    ],
+    flag: { x: 920, y: GAME_CONFIG.height - 24 - 188 },
+  },
 };
 
 export class Level {

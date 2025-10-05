@@ -11,7 +11,7 @@ export const GAME_CONFIG = {
 };
 
 export const COLORS = {
-  player: 0x000000,
+  player: 0x0c0c0c,
   ground: 0x6dd5b1,
   platform: 0xa3a1ff,
   hazard: 0xff6b6b,
