@@ -16,7 +16,7 @@ const LEVEL_DATA = {
       { x: 360, y: GAME_CONFIG.height - 24 - 12 },
       { x: 390, y: GAME_CONFIG.height - 24 - 12 },
     ],
-    stars: [
+    coins: [
       { x: 360, y: 320 },
       { x: 530, y: 260 },
       { x: 700, y: 220 },
@@ -47,7 +47,7 @@ const LEVEL_DATA = {
       { x: 516, y: GAME_CONFIG.height - 24 - 12 },
       { x: 548, y: GAME_CONFIG.height - 24 - 12 },
     ],
-    stars: [
+    coins: [
       { x: 340, y: 310 },
       { x: 520, y: 310 },
       { x: 740, y: 240 },
@@ -79,7 +79,7 @@ const LEVEL_DATA = {
       { x: 516, y: GAME_CONFIG.height - 24 - 12 },
       { x: 548, y: GAME_CONFIG.height - 24 - 12 },
     ],
-    stars: [
+    coins: [
       { x: 340, y: 310 },
       { x: 520, y: 310 },
       { x: 740, y: 240 },
@@ -95,7 +95,7 @@ export class Level {
     this.levelNumber = levelNumber;
     this.platforms = null;
     this.hazards = null;
-    this.stars = null;
+    this.coins = null;
     this.flag = null;
     this.levelData = LEVEL_DATA[levelNumber];
   }
@@ -110,7 +110,7 @@ export class Level {
   clear() {
     if (this.platforms) this.platforms.clear(true, true);
     if (this.hazards) this.hazards.clear(true, true);
-    if (this.stars) this.stars.clear(true, true);
+    if (this.coins) this.coins.clear(true, true);
     if (this.flag) this.flag.destroy();
   }
 
@@ -143,15 +143,17 @@ export class Level {
   }
 
   createCollectibles() {
-    this.stars = this.scene.physics.add.group({
+    this.coins = this.scene.physics.add.group({
       allowGravity: false,
       immovable: true,
     });
 
-    this.levelData.stars.forEach((star) => {
-      const starImage = this.scene.physics.add.image(star.x, star.y, "starTex");
-      starImage.body.setAllowGravity(false);
-      this.stars.add(starImage);
+    this.levelData.coins.forEach((coin) => {
+      const coinImage = this.scene.physics.add.image(coin.x, coin.y, "coinTex");
+      coinImage.body.setAllowGravity(false);
+      // Store the coin image for rotation updates
+      coinImage.rotationSpeed = 2; // Degrees per frame
+      this.coins.add(coinImage);
     });
   }
 
@@ -187,11 +189,22 @@ export class Level {
     return this.hazards;
   }
 
-  getStars() {
-    return this.stars;
+  getCoins() {
+    return this.coins;
   }
 
   getFlag() {
     return this.flag;
+  }
+
+  update() {
+    // Rotate all coins
+    if (this.coins) {
+      this.coins.children.entries.forEach((coin) => {
+        if (coin.active) {
+          coin.rotation += Phaser.Math.DegToRad(coin.rotationSpeed);
+        }
+      });
+    }
   }
 }

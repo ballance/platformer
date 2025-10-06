@@ -41,6 +41,7 @@ export class MainScene extends Phaser.Scene {
 
   update() {
     this.player.update();
+    this.level.update();
   }
 
   setupCollisions() {
@@ -50,11 +51,11 @@ export class MainScene extends Phaser.Scene {
       this.level.getPlatforms(),
     );
 
-    // Star collection
+    // Coin collection
     this.physics.add.overlap(
       this.player.getSprite(),
-      this.level.getStars(),
-      this.collectStar.bind(this),
+      this.level.getCoins(),
+      this.collectCoin.bind(this),
     );
 
     // Hazard collision
@@ -72,9 +73,9 @@ export class MainScene extends Phaser.Scene {
     );
   }
 
-  collectStar(playerSprite, star) {
-    star.disableBody(true, true);
-    this.uiManager.showStarCollected();
+  collectCoin(playerSprite, coin) {
+    coin.disableBody(true, true);
+    this.uiManager.showCoinCollected();
   }
 
   hitHazard() {

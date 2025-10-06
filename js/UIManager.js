@@ -59,8 +59,8 @@ export class UIManager {
     });
   }
 
-  showStarCollected() {
-    this.addScore(SCORING.star);
+  showCoinCollected() {
+    this.addScore(SCORING.coin);
   }
 
   showLevelComplete() {
