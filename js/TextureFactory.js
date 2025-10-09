@@ -69,37 +69,82 @@ export class TextureFactory {
     const centerX = size;
     const centerY = size;
 
-    // Fill the main coin circle with gold color
-    graphics.fillStyle(color, 1);
+    // Pumpkin colors
+    const pumpkinOrange = 0xff6600;
+    const pumpkinDark = 0xcc5200;
+    const stemGreen = 0x228b22;
+    const stemDark = 0x1a6b1a;
+
+    // Draw pumpkin body (circle)
+    graphics.fillStyle(pumpkinOrange, 1);
     graphics.fillCircle(centerX, centerY, size);
 
-    // Add a darker gold outer ring for depth
-    graphics.lineStyle(2, 0xb8860b, 1);
-    graphics.strokeCircle(centerX, centerY, size);
-
-    // Add inner circle for coin effect
-    graphics.lineStyle(1, 0xffed4e, 0.6);
-    graphics.strokeCircle(centerX, centerY, size * 0.8);
-
-    // Draw a simple dollar sign using lines
-    graphics.lineStyle(3, 0xb8860b, 1);
-    // Vertical line through S
-    graphics.moveTo(centerX, centerY - size * 0.5);
-    graphics.lineTo(centerX, centerY + size * 0.5);
+    // Add vertical ridges for pumpkin texture
+    graphics.lineStyle(1.5, pumpkinDark, 0.6);
+    // Left ridges
+    graphics.moveTo(centerX - size * 0.6, centerY - size * 0.5);
+    graphics.lineTo(centerX - size * 0.6, centerY + size * 0.5);
+    graphics.strokePath();
+    graphics.moveTo(centerX - size * 0.3, centerY - size * 0.8);
+    graphics.lineTo(centerX - size * 0.3, centerY + size * 0.8);
     graphics.strokePath();
 
-    // S curves (simplified)
-    graphics.moveTo(centerX + size * 0.3, centerY - size * 0.2);
-    graphics.lineTo(centerX - size * 0.3, centerY - size * 0.2);
+    // Center ridge
+    graphics.moveTo(centerX, centerY - size * 0.9);
+    graphics.lineTo(centerX, centerY + size * 0.9);
     graphics.strokePath();
 
-    graphics.moveTo(centerX - size * 0.3, centerY + size * 0.2);
-    graphics.lineTo(centerX + size * 0.3, centerY + size * 0.2);
+    // Right ridges
+    graphics.moveTo(centerX + size * 0.3, centerY - size * 0.8);
+    graphics.lineTo(centerX + size * 0.3, centerY + size * 0.8);
+    graphics.strokePath();
+    graphics.moveTo(centerX + size * 0.6, centerY - size * 0.5);
+    graphics.lineTo(centerX + size * 0.6, centerY + size * 0.5);
     graphics.strokePath();
 
-    // Add shine effect (small highlight)
-    graphics.fillStyle(0xffed4e, 0.3);
-    graphics.fillCircle(centerX - size * 0.3, centerY - size * 0.3, size * 0.15);
+    // Draw stem on top
+    graphics.fillStyle(stemGreen, 1);
+    graphics.fillRect(centerX - size * 0.15, centerY - size * 1.1, size * 0.3, size * 0.3);
+    graphics.lineStyle(1, stemDark, 1);
+    graphics.strokeRect(centerX - size * 0.15, centerY - size * 1.1, size * 0.3, size * 0.3);
+
+    // Jack-o-lantern face
+    graphics.fillStyle(0x000000, 1);
+
+    // Eyes (triangular)
+    graphics.fillTriangle(
+      centerX - size * 0.4, centerY - size * 0.3,
+      centerX - size * 0.2, centerY - size * 0.3,
+      centerX - size * 0.3, centerY - size * 0.05
+    );
+    graphics.fillTriangle(
+      centerX + size * 0.2, centerY - size * 0.3,
+      centerX + size * 0.4, centerY - size * 0.3,
+      centerX + size * 0.3, centerY - size * 0.05
+    );
+
+    // Nose (small triangle)
+    graphics.fillTriangle(
+      centerX, centerY,
+      centerX - size * 0.1, centerY + size * 0.15,
+      centerX + size * 0.1, centerY + size * 0.15
+    );
+
+    // Mouth (curved smile)
+    graphics.lineStyle(2, 0x000000, 1);
+    graphics.beginPath();
+    graphics.arc(centerX, centerY + size * 0.2, size * 0.5, 0.3, Math.PI - 0.3);
+    graphics.strokePath();
+
+    // Add teeth to smile
+    graphics.fillStyle(0x000000, 1);
+    for (let i = -1; i <= 1; i++) {
+      graphics.fillTriangle(
+        centerX + i * size * 0.25 - size * 0.08, centerY + size * 0.35,
+        centerX + i * size * 0.25 + size * 0.08, centerY + size * 0.35,
+        centerX + i * size * 0.25, centerY + size * 0.5
+      );
+    }
 
     graphics.generateTexture(key, size * 2, size * 2);
     graphics.destroy();
