@@ -51,11 +51,19 @@ export class MainScene extends Phaser.Scene {
       this.level.getPlatforms(),
     );
 
-    // Coin collection
+    // Player collisions with moving platforms
+    if (this.level.getMovingPlatforms()) {
+      this.physics.add.collider(
+        this.player.getSprite(),
+        this.level.getMovingPlatforms(),
+      );
+    }
+
+    // Star collection
     this.physics.add.overlap(
       this.player.getSprite(),
-      this.level.getCoins(),
-      this.collectCoin.bind(this),
+      this.level.getStars(),
+      this.collectStar.bind(this),
     );
 
     // Hazard collision
@@ -73,9 +81,9 @@ export class MainScene extends Phaser.Scene {
     );
   }
 
-  collectCoin(playerSprite, coin) {
-    coin.disableBody(true, true);
-    this.uiManager.showCoinCollected();
+  collectStar(playerSprite, star) {
+    star.disableBody(true, true);
+    this.uiManager.showStarCollected();
   }
 
   hitHazard() {
@@ -93,14 +101,21 @@ export class MainScene extends Phaser.Scene {
         this.loadLevel(2);
       });
     } else if (this.currentLevel === 2) {
-      // Show level complete and transition to level 2
+      // Show level complete and transition to level 3
       this.uiManager.showLevelComplete();
 
       this.time.delayedCall(2000, () => {
         this.loadLevel(3);
       });
+    } else if (this.currentLevel === 3) {
+      // Show level complete and transition to level 4
+      this.uiManager.showLevelComplete();
+
+      this.time.delayedCall(2000, () => {
+        this.loadLevel(4);
+      });
     } else {
-      // Game complete
+      // Game complete (after level 4)
       this.uiManager.showGameComplete();
     }
   }

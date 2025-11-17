@@ -11,12 +11,13 @@ const LEVEL_DATA = {
       { x: 700, y: 260 },
       { x: 820, y: 220 },
     ],
+    movingPlatforms: [], // No moving platforms in level 1
     hazards: [
       { x: 330, y: GAME_CONFIG.height - 24 - 12 },
       { x: 360, y: GAME_CONFIG.height - 24 - 12 },
       { x: 390, y: GAME_CONFIG.height - 24 - 12 },
     ],
-    coins: [
+    stars: [
       { x: 360, y: 320 },
       { x: 530, y: 260 },
       { x: 700, y: 220 },
@@ -36,6 +37,7 @@ const LEVEL_DATA = {
       { x: 850, y: 240 },
       { x: 900, y: 180 }, // Platform near flag
     ],
+    movingPlatforms: [], // No moving platforms in level 2
     hazards: [
       // First lava pit
       { x: 292, y: GAME_CONFIG.height - 24 - 12 },
@@ -47,7 +49,7 @@ const LEVEL_DATA = {
       { x: 516, y: GAME_CONFIG.height - 24 - 12 },
       { x: 548, y: GAME_CONFIG.height - 24 - 12 },
     ],
-    coins: [
+    stars: [
       { x: 340, y: 310 },
       { x: 520, y: 310 },
       { x: 740, y: 240 },
@@ -68,6 +70,7 @@ const LEVEL_DATA = {
       { x: 850, y: 240 },
       { x: 900, y: 180 }, // Platform near flag
     ],
+    movingPlatforms: [], // No moving platforms in level 3
     hazards: [
       // First lava pit
       { x: 292, y: GAME_CONFIG.height - 24 - 12 },
@@ -79,11 +82,86 @@ const LEVEL_DATA = {
       { x: 516, y: GAME_CONFIG.height - 24 - 12 },
       { x: 548, y: GAME_CONFIG.height - 24 - 12 },
     ],
-    coins: [
+    stars: [
       { x: 340, y: 310 },
       { x: 520, y: 310 },
       { x: 740, y: 240 },
       { x: 900, y: 140 },
+    ],
+    flag: { x: 920, y: GAME_CONFIG.height - 24 - 188 },
+  },
+  4: {
+    playerStart: { x: 80, y: GAME_CONFIG.height - 24 - 80 },
+    ground: [100, 196, 868], // Minimal ground tiles, focus on moving platforms
+    platforms: [
+      { x: 250, y: 460 }, // First static platform - lowered to be reachable
+      { x: 750, y: 400 }, // Platform near the end
+      { x: 850, y: 320 }, // Platform before flag
+    ],
+    movingPlatforms: [
+      {
+        x: 350,
+        y: 440,
+        moveType: "horizontal",
+        range: 100,
+        speed: 60
+      },
+      {
+        x: 500,
+        y: 400,
+        moveType: "vertical",
+        range: 80,
+        speed: 50
+      },
+      {
+        x: 620,
+        y: 360,
+        moveType: "horizontal",
+        range: 120,
+        speed: 70
+      },
+      {
+        x: 400,
+        y: 300,
+        moveType: "circular",
+        radius: 60,
+        speed: 0.02
+      },
+      {
+        x: 550,
+        y: 250,
+        moveType: "vertical",
+        range: 100,
+        speed: 45
+      },
+    ],
+    hazards: [
+      // Large lava pits requiring moving platforms to cross
+      { x: 292, y: GAME_CONFIG.height - 24 - 12 },
+      { x: 324, y: GAME_CONFIG.height - 24 - 12 },
+      { x: 356, y: GAME_CONFIG.height - 24 - 12 },
+      { x: 388, y: GAME_CONFIG.height - 24 - 12 },
+      { x: 420, y: GAME_CONFIG.height - 24 - 12 },
+      { x: 452, y: GAME_CONFIG.height - 24 - 12 },
+      { x: 484, y: GAME_CONFIG.height - 24 - 12 },
+      { x: 516, y: GAME_CONFIG.height - 24 - 12 },
+      { x: 548, y: GAME_CONFIG.height - 24 - 12 },
+      { x: 580, y: GAME_CONFIG.height - 24 - 12 },
+      { x: 612, y: GAME_CONFIG.height - 24 - 12 },
+      { x: 644, y: GAME_CONFIG.height - 24 - 12 },
+      { x: 676, y: GAME_CONFIG.height - 24 - 12 },
+      { x: 708, y: GAME_CONFIG.height - 24 - 12 },
+      { x: 740, y: GAME_CONFIG.height - 24 - 12 },
+      { x: 772, y: GAME_CONFIG.height - 24 - 12 },
+      { x: 804, y: GAME_CONFIG.height - 24 - 12 },
+      { x: 836, y: GAME_CONFIG.height - 24 - 12 },
+    ],
+    stars: [
+      { x: 350, y: 400 }, // On first moving platform
+      { x: 500, y: 330 }, // On vertical moving platform
+      { x: 620, y: 320 }, // On horizontal moving platform
+      { x: 400, y: 240 }, // Center of circular platform path
+      { x: 850, y: 280 }, // Near the flag
     ],
     flag: { x: 920, y: GAME_CONFIG.height - 24 - 188 },
   },
@@ -94,14 +172,16 @@ export class Level {
     this.scene = scene;
     this.levelNumber = levelNumber;
     this.platforms = null;
+    this.movingPlatforms = null;
     this.hazards = null;
-    this.coins = null;
+    this.stars = null;
     this.flag = null;
     this.levelData = LEVEL_DATA[levelNumber];
   }
 
   create() {
     this.createPlatforms();
+    this.createMovingPlatforms();
     this.createHazards();
     this.createCollectibles();
     this.createGoal();
@@ -109,8 +189,9 @@ export class Level {
 
   clear() {
     if (this.platforms) this.platforms.clear(true, true);
+    if (this.movingPlatforms) this.movingPlatforms.clear(true, true);
     if (this.hazards) this.hazards.clear(true, true);
-    if (this.coins) this.coins.clear(true, true);
+    if (this.stars) this.stars.clear(true, true);
     if (this.flag) this.flag.destroy();
   }
 
@@ -134,6 +215,39 @@ export class Level {
     });
   }
 
+  createMovingPlatforms() {
+    this.movingPlatforms = this.scene.physics.add.group({
+      allowGravity: false,
+      immovable: true,
+    });
+
+    if (this.levelData.movingPlatforms) {
+      this.levelData.movingPlatforms.forEach((platformData) => {
+        const platform = this.scene.physics.add.image(
+          platformData.x,
+          platformData.y,
+          "platformTex"
+        );
+
+        platform.body.setAllowGravity(false);
+        platform.body.setImmovable(true);
+        platform.body.setVelocity(0, 0);
+
+        // Store movement properties on the platform
+        platform.moveType = platformData.moveType;
+        platform.startX = platformData.x;
+        platform.startY = platformData.y;
+        platform.range = platformData.range;
+        platform.speed = platformData.speed;
+        platform.radius = platformData.radius;
+        platform.angle = 0; // For circular movement
+        platform.direction = 1; // For linear movement
+
+        this.movingPlatforms.add(platform);
+      });
+    }
+  }
+
   createHazards() {
     this.hazards = this.scene.physics.add.staticGroup();
 
@@ -143,17 +257,17 @@ export class Level {
   }
 
   createCollectibles() {
-    this.coins = this.scene.physics.add.group({
+    this.stars = this.scene.physics.add.group({
       allowGravity: false,
       immovable: true,
     });
 
-    this.levelData.coins.forEach((coin) => {
-      const coinImage = this.scene.physics.add.image(coin.x, coin.y, "coinTex");
-      coinImage.body.setAllowGravity(false);
-      // Store the coin image for rotation updates
-      coinImage.rotationSpeed = 2; // Degrees per frame
-      this.coins.add(coinImage);
+    this.levelData.stars.forEach((star) => {
+      const starImage = this.scene.physics.add.image(star.x, star.y, "starTex");
+      starImage.body.setAllowGravity(false);
+      // Store the star image for rotation updates
+      starImage.rotationSpeed = 2; // Degrees per frame
+      this.stars.add(starImage);
     });
   }
 
@@ -185,12 +299,16 @@ export class Level {
     return this.platforms;
   }
 
+  getMovingPlatforms() {
+    return this.movingPlatforms;
+  }
+
   getHazards() {
     return this.hazards;
   }
 
-  getCoins() {
-    return this.coins;
+  getStars() {
+    return this.stars;
   }
 
   getFlag() {
@@ -198,13 +316,65 @@ export class Level {
   }
 
   update() {
-    // Rotate all coins
-    if (this.coins) {
-      this.coins.children.entries.forEach((coin) => {
-        if (coin.active) {
-          coin.rotation += Phaser.Math.DegToRad(coin.rotationSpeed);
+    // Rotate all stars
+    if (this.stars) {
+      this.stars.children.entries.forEach((star) => {
+        if (star.active) {
+          star.rotation += Phaser.Math.DegToRad(star.rotationSpeed);
         }
       });
+    }
+
+    // Update moving platforms
+    if (this.movingPlatforms) {
+      this.movingPlatforms.children.entries.forEach((platform) => {
+        if (platform.active) {
+          this.updateMovingPlatform(platform);
+        }
+      });
+    }
+  }
+
+  updateMovingPlatform(platform) {
+    switch (platform.moveType) {
+      case "horizontal":
+        // Move platform left and right
+        platform.x += platform.speed * platform.direction * (1/60); // Normalize for 60fps
+
+        // Reverse direction at range limits
+        if (Math.abs(platform.x - platform.startX) > platform.range) {
+          platform.direction *= -1;
+          platform.x = platform.startX + platform.range * platform.direction;
+        }
+
+        platform.body.setVelocityX(platform.speed * platform.direction);
+        break;
+
+      case "vertical":
+        // Move platform up and down
+        platform.y += platform.speed * platform.direction * (1/60);
+
+        // Reverse direction at range limits
+        if (Math.abs(platform.y - platform.startY) > platform.range) {
+          platform.direction *= -1;
+          platform.y = platform.startY + platform.range * platform.direction;
+        }
+
+        platform.body.setVelocityY(platform.speed * platform.direction);
+        break;
+
+      case "circular":
+        // Move platform in a circle
+        platform.angle += platform.speed;
+        platform.x = platform.startX + Math.cos(platform.angle) * platform.radius;
+        platform.y = platform.startY + Math.sin(platform.angle) * platform.radius;
+
+        // Calculate velocity for physics body
+        const nextAngle = platform.angle + platform.speed;
+        const nextX = platform.startX + Math.cos(nextAngle) * platform.radius;
+        const nextY = platform.startY + Math.sin(nextAngle) * platform.radius;
+        platform.body.setVelocity((nextX - platform.x) * 60, (nextY - platform.y) * 60);
+        break;
     }
   }
 }

@@ -41,7 +41,7 @@ export class TextureFactory {
       COLORS.flagPole,
       COLORS.flagBanner,
     );
-    this.createCoinTexture("coinTex", SIZES.coin.size, COLORS.coin);
+    this.createStarTexture("starTex", SIZES.star.size, COLORS.star);
   }
 
   createBlockTexture(key, width, height, color) {
@@ -63,89 +63,24 @@ export class TextureFactory {
     graphics.destroy();
   }
 
-  createCoinTexture(key, size, color) {
+  createStarTexture(key, size, color) {
     const graphics = this.scene.add.graphics();
+    graphics.fillStyle(color, 1);
 
     const centerX = size;
     const centerY = size;
-
-    // Pumpkin colors
-    const pumpkinOrange = 0xff6600;
-    const pumpkinDark = 0xcc5200;
-    const stemGreen = 0x228b22;
-    const stemDark = 0x1a6b1a;
-
-    // Draw pumpkin body (circle)
-    graphics.fillStyle(pumpkinOrange, 1);
-    graphics.fillCircle(centerX, centerY, size);
-
-    // Add vertical ridges for pumpkin texture
-    graphics.lineStyle(1.5, pumpkinDark, 0.6);
-    // Left ridges
-    graphics.moveTo(centerX - size * 0.6, centerY - size * 0.5);
-    graphics.lineTo(centerX - size * 0.6, centerY + size * 0.5);
-    graphics.strokePath();
-    graphics.moveTo(centerX - size * 0.3, centerY - size * 0.8);
-    graphics.lineTo(centerX - size * 0.3, centerY + size * 0.8);
-    graphics.strokePath();
-
-    // Center ridge
-    graphics.moveTo(centerX, centerY - size * 0.9);
-    graphics.lineTo(centerX, centerY + size * 0.9);
-    graphics.strokePath();
-
-    // Right ridges
-    graphics.moveTo(centerX + size * 0.3, centerY - size * 0.8);
-    graphics.lineTo(centerX + size * 0.3, centerY + size * 0.8);
-    graphics.strokePath();
-    graphics.moveTo(centerX + size * 0.6, centerY - size * 0.5);
-    graphics.lineTo(centerX + size * 0.6, centerY + size * 0.5);
-    graphics.strokePath();
-
-    // Draw stem on top
-    graphics.fillStyle(stemGreen, 1);
-    graphics.fillRect(centerX - size * 0.15, centerY - size * 1.1, size * 0.3, size * 0.3);
-    graphics.lineStyle(1, stemDark, 1);
-    graphics.strokeRect(centerX - size * 0.15, centerY - size * 1.1, size * 0.3, size * 0.3);
-
-    // Jack-o-lantern face
-    graphics.fillStyle(0x000000, 1);
-
-    // Eyes (triangular)
-    graphics.fillTriangle(
-      centerX - size * 0.4, centerY - size * 0.3,
-      centerX - size * 0.2, centerY - size * 0.3,
-      centerX - size * 0.3, centerY - size * 0.05
-    );
-    graphics.fillTriangle(
-      centerX + size * 0.2, centerY - size * 0.3,
-      centerX + size * 0.4, centerY - size * 0.3,
-      centerX + size * 0.3, centerY - size * 0.05
+    const points = this.generateStarPoints(
+      centerX,
+      centerY,
+      size,
+      size * 0.5,
+      5,
     );
 
-    // Nose (small triangle)
-    graphics.fillTriangle(
-      centerX, centerY,
-      centerX - size * 0.1, centerY + size * 0.15,
-      centerX + size * 0.1, centerY + size * 0.15
-    );
-
-    // Mouth (curved smile)
-    graphics.lineStyle(2, 0x000000, 1);
-    graphics.beginPath();
-    graphics.arc(centerX, centerY + size * 0.2, size * 0.5, 0.3, Math.PI - 0.3);
-    graphics.strokePath();
-
-    // Add teeth to smile
-    graphics.fillStyle(0x000000, 1);
-    for (let i = -1; i <= 1; i++) {
-      graphics.fillTriangle(
-        centerX + i * size * 0.25 - size * 0.08, centerY + size * 0.35,
-        centerX + i * size * 0.25 + size * 0.08, centerY + size * 0.35,
-        centerX + i * size * 0.25, centerY + size * 0.5
-      );
-    }
-
+    graphics.fillPoints(points, true);
+    // Add a white outline to make the star more visible
+    graphics.lineStyle(3, 0xffffff, 0.8);
+    graphics.strokePoints(points, true);
     graphics.generateTexture(key, size * 2, size * 2);
     graphics.destroy();
   }
@@ -153,121 +88,103 @@ export class TextureFactory {
   createStickManStandingTexture(key, width, height) {
     const graphics = this.scene.add.graphics();
 
-    // Skeleton colors
-    const boneColor = 0xffffff;  // White/bone color
-    const shadowColor = 0x888888;  // Gray for depth
-    const lineWidth = 3;
+    // Mario-style colors
+    const skinColor = 0xfdbcb4;  // Peach skin color
+    const hatColor = 0xff0000;    // Red hat
+    const overallsColor = 0x0066cc;  // Blue overalls
+    const shirtColor = 0xff0000;  // Red shirt
+    const brownColor = 0x8b4513;  // Brown shoes
+    const mustacheColor = 0x000000;  // Black mustache
+    const whiteColor = 0xffffff;  // White gloves
 
-    // Skull (larger than stick figure head)
-    graphics.fillStyle(boneColor, 1);
-    graphics.fillEllipse(24, 14, 20, 22);
-    graphics.lineStyle(1, shadowColor, 0.5);
-    graphics.strokeEllipse(24, 14, 20, 22);
+    // Cap/Hat with "M" emblem
+    graphics.fillStyle(hatColor, 1);
+    graphics.fillRoundedRect(14, 6, 20, 10, 3);
+    // Hat brim
+    graphics.fillRect(12, 14, 24, 3);
 
-    // Eye sockets (dark hollow circles)
+    // White circle for M emblem
+    graphics.fillStyle(whiteColor, 1);
+    graphics.fillCircle(24, 11, 5);
+
+    // Draw "M" on hat
+    graphics.lineStyle(2, hatColor, 1);
+    graphics.moveTo(20, 9);
+    graphics.lineTo(20, 13);
+    graphics.moveTo(20, 9);
+    graphics.lineTo(22, 11);
+    graphics.lineTo(24, 9);
+    graphics.lineTo(26, 11);
+    graphics.lineTo(28, 9);
+    graphics.lineTo(28, 13);
+    graphics.strokePath();
+
+    // Face
+    graphics.fillStyle(skinColor, 1);
+    graphics.fillEllipse(24, 19, 16, 12);
+
+    // Eyes (simple black dots)
     graphics.fillStyle(0x000000, 1);
-    graphics.fillCircle(19, 12, 4);
-    graphics.fillCircle(29, 12, 4);
+    graphics.fillCircle(20, 18, 2);
+    graphics.fillCircle(28, 18, 2);
 
-    // Nasal cavity (small triangle)
-    graphics.fillStyle(0x000000, 1);
-    graphics.fillTriangle(24, 16, 22, 19, 26, 19);
+    // Eye whites
+    graphics.fillStyle(whiteColor, 1);
+    graphics.fillCircle(20, 17, 1);
+    graphics.fillCircle(28, 17, 1);
 
-    // Teeth/jaw
-    graphics.lineStyle(1, 0x000000, 0.8);
-    graphics.moveTo(18, 20);
-    graphics.lineTo(30, 20);
-    graphics.strokePath();
-    // Individual teeth
-    for (let i = 0; i < 4; i++) {
-      graphics.moveTo(19 + i * 3, 20);
-      graphics.lineTo(19 + i * 3, 22);
-      graphics.strokePath();
-    }
+    // Mustache (thick and iconic)
+    graphics.fillStyle(mustacheColor, 1);
+    graphics.fillEllipse(24, 22, 10, 3);
+    graphics.fillCircle(16, 22, 2);
+    graphics.fillCircle(32, 22, 2);
 
-    // Spine (vertebrae)
-    graphics.lineStyle(lineWidth, boneColor, 1);
-    graphics.moveTo(24, 24);
-    graphics.lineTo(24, 40);
-    graphics.strokePath();
+    // Nose
+    graphics.fillStyle(skinColor, 1);
+    graphics.fillCircle(24, 20, 3);
 
-    // Add vertebrae notches
-    graphics.lineStyle(1, shadowColor, 0.5);
-    for (let i = 0; i < 3; i++) {
-      graphics.strokeCircle(24, 28 + i * 4, 2);
-    }
+    // Body - Red shirt
+    graphics.fillStyle(shirtColor, 1);
+    graphics.fillRect(18, 26, 12, 8);
 
-    // Ribcage
-    graphics.lineStyle(2, boneColor, 1);
-    // Left ribs
-    graphics.moveTo(24, 28);
-    graphics.lineTo(16, 30);
-    graphics.strokePath();
-    graphics.moveTo(24, 31);
-    graphics.lineTo(17, 33);
-    graphics.strokePath();
-    graphics.moveTo(24, 34);
-    graphics.lineTo(18, 35);
-    graphics.strokePath();
+    // Overall straps
+    graphics.fillStyle(overallsColor, 1);
+    graphics.fillRect(18, 26, 3, 8);
+    graphics.fillRect(27, 26, 3, 8);
 
-    // Right ribs
-    graphics.moveTo(24, 28);
-    graphics.lineTo(32, 30);
-    graphics.strokePath();
-    graphics.moveTo(24, 31);
-    graphics.lineTo(31, 33);
-    graphics.strokePath();
-    graphics.moveTo(24, 34);
-    graphics.lineTo(30, 35);
-    graphics.strokePath();
+    // Overalls body
+    graphics.fillRect(16, 34, 16, 8);
 
-    // Arms (bones with joints)
-    graphics.lineStyle(lineWidth, boneColor, 1);
+    // Overall buttons (gold/yellow)
+    graphics.fillStyle(0xffd700, 1);
+    graphics.fillCircle(20, 30, 1);
+    graphics.fillCircle(28, 30, 1);
+
+    // Arms with white gloves
+    graphics.fillStyle(shirtColor, 1);
     // Left arm
-    graphics.moveTo(24, 28);
-    graphics.lineTo(18, 32);
-    graphics.strokePath();
-    graphics.strokeCircle(18, 32, 2); // Elbow joint
-    graphics.moveTo(18, 32);
-    graphics.lineTo(12, 36);
-    graphics.strokePath();
-    graphics.strokeCircle(12, 36, 2); // Hand
-
+    graphics.fillRect(12, 28, 6, 8);
     // Right arm
-    graphics.moveTo(24, 28);
-    graphics.lineTo(30, 32);
-    graphics.strokePath();
-    graphics.strokeCircle(30, 32, 2); // Elbow joint
-    graphics.moveTo(30, 32);
-    graphics.lineTo(36, 36);
-    graphics.strokePath();
-    graphics.strokeCircle(36, 36, 2); // Hand
+    graphics.fillRect(30, 28, 6, 8);
 
-    // Pelvis
-    graphics.lineStyle(2, boneColor, 1);
-    graphics.strokeEllipse(24, 40, 8, 4);
+    // White gloves
+    graphics.fillStyle(whiteColor, 1);
+    graphics.fillCircle(12, 37, 3);
+    graphics.fillCircle(36, 37, 3);
 
-    // Legs (bones with joints)
-    graphics.lineStyle(lineWidth, boneColor, 1);
+    // Legs
+    graphics.fillStyle(overallsColor, 1);
     // Left leg
-    graphics.moveTo(22, 40);
-    graphics.lineTo(18, 46);
-    graphics.strokePath();
-    graphics.strokeCircle(18, 46, 2); // Knee joint
-    graphics.moveTo(18, 46);
-    graphics.lineTo(16, 52);
-    graphics.strokePath();
-    graphics.strokeCircle(16, 52, 2); // Foot
-
+    graphics.fillRect(18, 42, 5, 6);
     // Right leg
-    graphics.moveTo(26, 40);
-    graphics.lineTo(30, 46);
-    graphics.strokePath();
-    graphics.strokeCircle(30, 46, 2); // Knee joint
-    graphics.moveTo(30, 46);
-    graphics.lineTo(32, 52);
-    graphics.strokePath();
-    graphics.strokeCircle(32, 52, 2); // Foot
+    graphics.fillRect(25, 42, 5, 6);
+
+    // Brown shoes
+    graphics.fillStyle(brownColor, 1);
+    // Left shoe
+    graphics.fillRoundedRect(16, 48, 8, 6, 2);
+    // Right shoe
+    graphics.fillRoundedRect(24, 48, 8, 6, 2);
 
     graphics.generateTexture(key, width, height);
     graphics.destroy();
@@ -276,134 +193,154 @@ export class TextureFactory {
   createStickManRunningTexture(key, width, height) {
     const graphics = this.scene.add.graphics();
 
-    // Skeleton colors
-    const boneColor = 0xffffff;  // White/bone color
-    const shadowColor = 0x888888;  // Gray for depth
-    const lineWidth = 3;
+    // Mario-style colors
+    const skinColor = 0xfdbcb4;  // Peach skin color
+    const hatColor = 0xff0000;    // Red hat
+    const overallsColor = 0x0066cc;  // Blue overalls
+    const shirtColor = 0xff0000;  // Red shirt
+    const brownColor = 0x8b4513;  // Brown shoes
+    const mustacheColor = 0x000000;  // Black mustache
+    const whiteColor = 0xffffff;  // White gloves
 
-    // Skull (positioned forward for running, slightly tilted)
-    graphics.fillStyle(boneColor, 1);
-    graphics.fillEllipse(28, 14, 20, 22);
-    graphics.lineStyle(1, shadowColor, 0.5);
-    graphics.strokeEllipse(28, 14, 20, 22);
+    // Cap/Hat (tilted forward for running)
+    graphics.fillStyle(hatColor, 1);
+    graphics.fillRoundedRect(16, 5, 20, 10, 3);
+    // Hat brim
+    graphics.fillRect(14, 13, 24, 3);
 
-    // Eye sockets (looking forward)
+    // White circle for M emblem
+    graphics.fillStyle(whiteColor, 1);
+    graphics.fillCircle(26, 10, 5);
+
+    // Draw "M" on hat
+    graphics.lineStyle(2, hatColor, 1);
+    graphics.moveTo(22, 8);
+    graphics.lineTo(22, 12);
+    graphics.moveTo(22, 8);
+    graphics.lineTo(24, 10);
+    graphics.lineTo(26, 8);
+    graphics.lineTo(28, 10);
+    graphics.lineTo(30, 8);
+    graphics.lineTo(30, 12);
+    graphics.strokePath();
+
+    // Face (leaning forward)
+    graphics.fillStyle(skinColor, 1);
+    graphics.fillEllipse(26, 18, 16, 12);
+
+    // Eyes (looking determined)
     graphics.fillStyle(0x000000, 1);
-    graphics.fillCircle(26, 12, 4);
-    graphics.fillCircle(34, 12, 4);
+    graphics.fillCircle(24, 17, 2);
+    graphics.fillCircle(32, 17, 2);
 
-    // Nasal cavity
-    graphics.fillStyle(0x000000, 1);
-    graphics.fillTriangle(30, 16, 28, 19, 32, 19);
+    // Eye whites
+    graphics.fillStyle(whiteColor, 1);
+    graphics.fillCircle(25, 16, 1);
+    graphics.fillCircle(33, 16, 1);
 
-    // Gritted teeth (determined expression)
-    graphics.lineStyle(1, 0x000000, 0.8);
-    graphics.moveTo(24, 20);
-    graphics.lineTo(36, 20);
-    graphics.strokePath();
-    // Clenched teeth
-    for (let i = 0; i < 4; i++) {
-      graphics.moveTo(25 + i * 3, 20);
-      graphics.lineTo(25 + i * 3, 22);
-      graphics.strokePath();
-    }
+    // Mustache (flowing with motion)
+    graphics.fillStyle(mustacheColor, 1);
+    graphics.fillEllipse(26, 21, 10, 3);
+    graphics.fillCircle(18, 21, 2);
+    graphics.fillCircle(34, 21, 2);
 
-    // Spine (diagonal, leaning forward)
-    graphics.lineStyle(lineWidth, boneColor, 1);
-    graphics.moveTo(26, 24);
-    graphics.lineTo(20, 40);
-    graphics.strokePath();
+    // Nose
+    graphics.fillStyle(skinColor, 1);
+    graphics.fillCircle(26, 19, 3);
 
-    // Add vertebrae notches along diagonal spine
-    graphics.lineStyle(1, shadowColor, 0.5);
-    graphics.strokeCircle(25, 28, 2);
-    graphics.strokeCircle(23, 32, 2);
-    graphics.strokeCircle(21, 36, 2);
+    // Body - Red shirt (leaning forward)
+    graphics.fillStyle(shirtColor, 1);
+    graphics.beginPath();
+    graphics.moveTo(20, 25);
+    graphics.lineTo(32, 25);
+    graphics.lineTo(30, 33);
+    graphics.lineTo(18, 33);
+    graphics.closePath();
+    graphics.fillPath();
 
-    // Ribcage (angled for running)
-    graphics.lineStyle(2, boneColor, 1);
-    // Left ribs
-    graphics.moveTo(25, 28);
-    graphics.lineTo(17, 29);
-    graphics.strokePath();
-    graphics.moveTo(24, 31);
-    graphics.lineTo(16, 32);
-    graphics.strokePath();
-    graphics.moveTo(23, 34);
-    graphics.lineTo(16, 35);
-    graphics.strokePath();
+    // Overall straps
+    graphics.fillStyle(overallsColor, 1);
+    graphics.fillRect(20, 25, 3, 8);
+    graphics.fillRect(29, 25, 3, 8);
 
-    // Right ribs
-    graphics.moveTo(25, 28);
-    graphics.lineTo(33, 29);
-    graphics.strokePath();
-    graphics.moveTo(24, 31);
-    graphics.lineTo(32, 32);
-    graphics.strokePath();
-    graphics.moveTo(23, 34);
-    graphics.lineTo(31, 35);
-    graphics.strokePath();
+    // Overalls body (angled)
+    graphics.beginPath();
+    graphics.moveTo(18, 33);
+    graphics.lineTo(30, 33);
+    graphics.lineTo(28, 41);
+    graphics.lineTo(16, 41);
+    graphics.closePath();
+    graphics.fillPath();
 
-    // Arms in running position
-    graphics.lineStyle(lineWidth, boneColor, 1);
+    // Overall buttons
+    graphics.fillStyle(0xffd700, 1);
+    graphics.fillCircle(22, 29, 1);
+    graphics.fillCircle(30, 29, 1);
 
-    // Front arm (forward, bent)
-    graphics.moveTo(24, 30);
-    graphics.lineTo(32, 28);
-    graphics.strokePath();
-    graphics.strokeCircle(32, 28, 2); // Elbow joint
-    graphics.moveTo(32, 28);
-    graphics.lineTo(36, 24);
-    graphics.strokePath();
-    graphics.strokeCircle(36, 24, 2); // Fist
+    // Running arms with white gloves
+    graphics.fillStyle(shirtColor, 1);
 
-    // Back arm (backward, bent)
-    graphics.moveTo(24, 30);
-    graphics.lineTo(16, 34);
-    graphics.strokePath();
-    graphics.strokeCircle(16, 34, 2); // Elbow joint
-    graphics.moveTo(16, 34);
-    graphics.lineTo(14, 38);
-    graphics.strokePath();
-    graphics.strokeCircle(14, 38, 2); // Fist
+    // Front arm (pumping forward)
+    graphics.beginPath();
+    graphics.moveTo(32, 27);
+    graphics.lineTo(38, 24);
+    graphics.lineTo(40, 28);
+    graphics.lineTo(34, 31);
+    graphics.closePath();
+    graphics.fillPath();
 
-    // Pelvis (tilted for running)
-    graphics.lineStyle(2, boneColor, 1);
-    graphics.strokeEllipse(20, 40, 8, 4);
+    // Back arm (pumping back)
+    graphics.beginPath();
+    graphics.moveTo(18, 27);
+    graphics.lineTo(10, 32);
+    graphics.lineTo(8, 36);
+    graphics.lineTo(16, 31);
+    graphics.closePath();
+    graphics.fillPath();
 
-    // Legs in running stride
-    graphics.lineStyle(lineWidth, boneColor, 1);
+    // White gloves
+    graphics.fillStyle(whiteColor, 1);
+    graphics.fillCircle(40, 26, 3);  // Front hand
+    graphics.fillCircle(8, 34, 3);   // Back hand
 
-    // Front leg (forward stride, bent knee)
-    graphics.moveTo(22, 40);
-    graphics.lineTo(26, 46);
-    graphics.strokePath();
-    graphics.strokeCircle(26, 46, 2); // Knee joint
-    graphics.moveTo(26, 46);
-    graphics.lineTo(30, 52);
-    graphics.strokePath();
-    graphics.strokeCircle(30, 52, 2); // Foot
+    // Running legs
+    graphics.fillStyle(overallsColor, 1);
 
-    // Back leg (back stride, extended)
-    graphics.moveTo(18, 40);
-    graphics.lineTo(12, 46);
-    graphics.strokePath();
-    graphics.strokeCircle(12, 46, 2); // Knee joint
-    graphics.moveTo(12, 46);
-    graphics.lineTo(10, 52);
-    graphics.strokePath();
-    graphics.strokeCircle(10, 52, 2); // Foot
+    // Front leg (extended forward)
+    graphics.beginPath();
+    graphics.moveTo(24, 41);
+    graphics.lineTo(29, 41);
+    graphics.lineTo(32, 47);
+    graphics.lineTo(27, 47);
+    graphics.closePath();
+    graphics.fillPath();
+
+    // Back leg (extended back)
+    graphics.beginPath();
+    graphics.moveTo(16, 41);
+    graphics.lineTo(21, 41);
+    graphics.lineTo(14, 47);
+    graphics.lineTo(9, 47);
+    graphics.closePath();
+    graphics.fillPath();
+
+    // Brown shoes
+    graphics.fillStyle(brownColor, 1);
+    // Front shoe
+    graphics.fillRoundedRect(28, 47, 10, 6, 2);
+    // Back shoe
+    graphics.fillRoundedRect(6, 47, 10, 6, 2);
 
     // Motion lines for speed effect
-    graphics.lineStyle(1, boneColor, 0.3);
-    graphics.moveTo(15, 14);
-    graphics.lineTo(8, 14);
+    graphics.lineStyle(2, 0xffffff, 0.4);
+    graphics.moveTo(14, 10);
+    graphics.lineTo(6, 10);
     graphics.strokePath();
-    graphics.moveTo(15, 30);
-    graphics.lineTo(5, 30);
+    graphics.moveTo(14, 25);
+    graphics.lineTo(4, 25);
     graphics.strokePath();
-    graphics.moveTo(15, 45);
-    graphics.lineTo(6, 45);
+    graphics.moveTo(14, 40);
+    graphics.lineTo(5, 40);
     graphics.strokePath();
 
     graphics.generateTexture(key, width, height);
